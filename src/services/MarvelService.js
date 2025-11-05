@@ -16,7 +16,7 @@ class MarvelService {
         // Big object to API
         const result = await this.getResource(`${this._apiBase}?limit=9&apikey=${this._apiKey}`);
 
-        return result.data.results.map(this._transformCharacter());
+        return result.data.results.map(this._transformCharacter);
     }
 
     getCharacters = async (id) => {
