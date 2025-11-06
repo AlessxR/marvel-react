@@ -29,12 +29,17 @@ class RandomChar extends React.Component {
         this.setState({ char, loading: false });
     }
 
+    onCharLoading = () => {
+        this.setState({loading: true});
+    }
+
     onError = () => {
         this.setState({ loading: false, error: true });
     }
 
     updateChar = () => {
         const id = Math.floor(Math.random() * (20 - 0));
+        this.onCharLoading();
         this.marvelService
             .getCharacters(id)
             .then(this.onChatLoaded)

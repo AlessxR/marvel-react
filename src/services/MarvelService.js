@@ -3,6 +3,7 @@
 class MarvelService {
 
     _apiBase = 'https://marvel-server-zeta.vercel.app/characters';
+    _apiBaseComics = 'https://marvel-server-zeta.vercel.app/comics';
     _apiKey = 'd4eecb0c66dedbfae4eab45d312fc1df';
 
     getResource = async (url) => {
@@ -30,11 +31,13 @@ class MarvelService {
 
     _transformCharacter = (character) => {
         return {
+            id: character.id,
             name: character.name,
             description: character.description,
-            thumbnail: character.thumbnail.path + '.' + character.thumbnail.extenstion,
+            thumbnail: character.thumbnail.path + '.' + character.thumbnail.extension,
             homepage: character.urls[0].url,
-            wiki: character.urls[1].url
+            wiki: character.urls[1].url,
+            comics: character.comics,
         }
     }
 }
