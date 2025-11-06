@@ -56,6 +56,13 @@ class CharInfo extends React.Component {
         }
     }
 
+    componentDidCatch(error, info) {
+        console.log(error, info);
+        this.setState({
+            error: true,
+        });
+    }
+
     render() {
 
         const { char, loading, error, skeleton } = this.state;
