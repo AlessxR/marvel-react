@@ -9,7 +9,10 @@ class CharList extends React.Component {
 
     // 9 chars in state array, chars
     state = {
-        chars: []
+        chars: [],
+        loading: false,
+        newItemLoading: false,
+        offset: 210,
     }
 
     componentDidMount() {
@@ -17,6 +20,26 @@ class CharList extends React.Component {
         const data = this.marvelService.getAllCharacters().then(res => this.setState({ chars: res }));
 
         return data;
+    }
+
+    onRequest = (offset) => {
+        this.onCharListLoading();
+        this.marvelService.getAllCharacters(offset).then(this.onCharListLoaded);
+    }
+
+    onCharListLoaded = (newCharList) => {
+        this.setState(({ offset, chars }) => ({
+            charList: [...chars, ...newCharList],
+            loading: false,
+            newItemLoading: false,
+            offset: offset + 9,
+        }));
+    }
+
+    onCharListLoading = () => {
+        this.setState({
+            newItemLoading: true,
+        })
     }
 
 
@@ -37,7 +60,11 @@ class CharList extends React.Component {
                 <ul className="char__grid">
                     {items}
                 </ul>
-                <button className="button button__main button__long">
+                <button
+                    className="button button__main button__long"
+                    disabled={this.state.newItemLoading}
+                    onClick={() => this.onRequest(this.state.offset)}
+                >
                     <div className="inner">load more</div>
                 </button>
             </div>
