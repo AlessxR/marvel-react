@@ -3,8 +3,8 @@
 class MarvelService {
 
     _apiBase = 'https://marvel-server-zeta.vercel.app/characters';
-    _apiBaseComics = 'https://marvel-server-zeta.vercel.app/comics';
     _apiKey = 'd4eecb0c66dedbfae4eab45d312fc1df';
+    _baseLimit = 9;
 
     getResource = async (url) => {
         let res = await fetch(url);
@@ -13,9 +13,9 @@ class MarvelService {
         return await res.json();
     }
 
-    getAllCharacters = async () => {
+    getAllCharacters = async (limit = this._baseLimit) => {
         // Big object to API
-        const result = await this.getResource(`${this._apiBase}?limit=9&apikey=${this._apiKey}`);
+        const result = await this.getResource(`${this._apiBase}?limit=${limit}&apikey=${this._apiKey}`);
 
         return result.data.results.map(this._transformCharacter);
     }

@@ -12,36 +12,32 @@ class CharList extends React.Component {
         chars: [],
         loading: false,
         newItemLoading: false,
-        offset: 210,
+        limit: 9,
     }
 
     componentDidMount() {
-        // data -> local state in class
-        const data = this.marvelService.getAllCharacters().then(res => this.setState({ chars: res }));
-
-        return data;
+        this.onRequest(this.state.limit);
     }
 
-    onRequest = (offset) => {
+    onRequest = (limit) => {
         this.onCharListLoading();
-        this.marvelService.getAllCharacters(offset).then(this.onCharListLoaded);
+        this.marvelService.getAllCharacters(limit).then(this.onCharListLoaded);
     }
 
     onCharListLoaded = (newCharList) => {
-        this.setState(({ offset, chars }) => ({
-            charList: [...chars, ...newCharList],
+        this.setState(({ limit, chars }) => ({
+            chars: [...chars, ...newCharList],
             loading: false,
             newItemLoading: false,
-            offset: offset + 9,
+            limit: limit + 9,
         }));
     }
 
     onCharListLoading = () => {
         this.setState({
             newItemLoading: true,
-        })
+        });
     }
-
 
     render() {
         // generate a new component with array-data-state
@@ -63,7 +59,7 @@ class CharList extends React.Component {
                 <button
                     className="button button__main button__long"
                     disabled={this.state.newItemLoading}
-                    onClick={() => this.onRequest(this.state.offset)}
+                    onClick={() => this.onRequest(this.state.limit)}
                 >
                     <div className="inner">load more</div>
                 </button>
