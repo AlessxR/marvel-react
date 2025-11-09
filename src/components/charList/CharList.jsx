@@ -13,6 +13,7 @@ class CharList extends React.Component {
         loading: false,
         newItemLoading: false,
         limit: 9,
+        selectedId: null,
     }
 
     componentDidMount() {
@@ -39,6 +40,11 @@ class CharList extends React.Component {
         });
     }
 
+    onSelect = (id) => {
+        this.setState({ selectedId: id });
+        this.props.onCharSelected(id);
+    }
+
     render() {
         // generate a new component with array-data-state
         const items = this.state.chars.map(item => {
@@ -48,6 +54,8 @@ class CharList extends React.Component {
                 name={item.name}
                 img={item.thumbnail}
                 onCharSelected={this.props.onCharSelected}
+                onSelect={this.onSelect}
+                selected={this.state.selectedId === item.id}
             />
         });
 
@@ -68,9 +76,9 @@ class CharList extends React.Component {
     }
 }
 
-const RenderNewChar = ({ id, name, img, onCharSelected }) => {
+const RenderNewChar = ({ id, name, img, onSelect, selected }) => {
     return (
-        <li className="char__item" onClick={() => onCharSelected(id)}>
+        <li className={`char__item ${selected ? 'char__item_selected' : ''}`} onClick={() => onSelect(id)}>
             <img src={img} alt={name} />
             <div className="char__name">{name}</div>
         </li>
