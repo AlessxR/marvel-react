@@ -1,79 +1,74 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
 import './charList.scss';
+
 import MarvelService from '../../services/MarvelService';
 
-class CharList extends React.Component {
+const CharList = (props) => {
 
-    marvelService = new MarvelService();
+    const marvelService = new MarvelService();
 
-    // 9 chars in state array, chars
-    state = {
-        chars: [],
-        loading: false,
-        newItemLoading: false,
-        limit: 9,
-        selectedId: null,
+    const [chars, setChars] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [newItemLoading, setNewItemLoading] = useState(false);
+    const [limit, setLimit] = useState(9);
+    const [selectedId, setSelectedId] = useState(null);
+
+
+    useEffect(() => {
+        onRequest();
+    }, []);
+
+    const onRequest = (limit) => {
+        onCharListLoading();
+        marvelService.getAllCharacters(limit).then(onCharListLoaded);
     }
 
-    componentDidMount() {
-        this.onRequest(this.state.limit);
+    const onCharListLoaded = (newCharList) => {
+        setChars(chars => [...chars, ...newCharList]);
+        setLoading(false);
+        setNewItemLoading(false);
+        setLimit(limit + 9);
     }
 
-    onRequest = (limit) => {
-        this.onCharListLoading();
-        this.marvelService.getAllCharacters(limit).then(this.onCharListLoaded);
+    const onCharListLoading = () => {
+        setNewItemLoading(true);
     }
 
-    onCharListLoaded = (newCharList) => {
-        this.setState(({ limit, chars }) => ({
-            chars: [...chars, ...newCharList],
-            loading: false,
-            newItemLoading: false,
-            limit: limit + 9,
-        }));
+    const onSelect = (id) => {
+        setSelectedId(id);
+        props.onCharSelected(id);
     }
 
-    onCharListLoading = () => {
-        this.setState({
-            newItemLoading: true,
-        });
-    }
+    const items = chars.map(item => {
+        return <RenderNewChar
+            key={item.name}
+            id={item.id}
+            name={item.name}
+            img={item.thumbnail}
+            onCharSelected={props.onCharSelected}
+            onSelect={onSelect}
+            selected={selectedId === item.id}
+        />
+    });
 
-    onSelect = (id) => {
-        this.setState({ selectedId: id });
-        this.props.onCharSelected(id);
-    }
 
-    render() {
-        // generate a new component with array-data-state
-        const items = this.state.chars.map(item => {
-            return <RenderNewChar
-                key={item.name}
-                id={item.id}
-                name={item.name}
-                img={item.thumbnail}
-                onCharSelected={this.props.onCharSelected}
-                onSelect={this.onSelect}
-                selected={this.state.selectedId === item.id}
-            />
-        });
+    return (
 
-        return (
-            <div className="char__list">
-                <ul className="char__grid">
-                    {items}
-                </ul>
-                <button
-                    className="button button__main button__long"
-                    disabled={this.state.newItemLoading}
-                    onClick={() => this.onRequest(this.state.limit)}
-                >
-                    <div className="inner">load more</div>
-                </button>
-            </div>
-        )
-    }
+
+        <div className="char__list">
+            <ul className="char__grid">
+                {items}
+            </ul>
+            <button
+                className="button button__main button__long"
+                disabled={newItemLoading}
+                onClick={() => onRequest(limit)}
+            >
+                <div className="inner">load more</div>
+            </button>
+        </div>
+    )
 }
 
 const RenderNewChar = ({ id, name, img, onSelect, selected }) => {
