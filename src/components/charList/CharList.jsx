@@ -2,37 +2,33 @@ import React, {useEffect, useState} from 'react';
 
 import './charList.scss';
 
-import MarvelService from '../../services/MarvelService';
+import useMarvelService from '../../services/MarvelService.jsx';
 
 const CharList = (props) => {
 
-    const marvelService = new MarvelService();
+    const {loading, error, getAllCharacters} = useMarvelService();
 
     const [chars, setChars] = useState([]);
-    const [loading, setLoading] = useState(false);
     const [newItemLoading, setNewItemLoading] = useState(false);
     const [limit, setLimit] = useState(9);
     const [selectedId, setSelectedId] = useState(null);
 
 
+    // To API
     useEffect(() => {
-        onRequest();
+        onRequest(limit, true);
     }, []);
 
-    const onRequest = (limit) => {
-        onCharListLoading();
-        marvelService.getAllCharacters(limit).then(onCharListLoaded);
+    // To API
+    const onRequest = (limit, initial) => {
+        initial ? setNewItemLoading(false) : setNewItemLoading(true);
+        getAllCharacters(limit).then(onCharListLoaded);
     }
 
     const onCharListLoaded = (newCharList) => {
         setChars(chars => [...chars, ...newCharList]);
-        setLoading(false);
         setNewItemLoading(false);
         setLimit(limit + 9);
-    }
-
-    const onCharListLoading = () => {
-        setNewItemLoading(true);
     }
 
     const onSelect = (id) => {
@@ -52,10 +48,7 @@ const CharList = (props) => {
         />
     });
 
-
     return (
-
-
         <div className="char__list">
             <ul className="char__grid">
                 {items}

@@ -8,6 +8,8 @@ import CharInfo from "../charInfo/CharInfo";
 import decoration from '../../resources/img/vision.png';
 
 import ErrorBoundary from "../errorBoundary/ErrorBoundary";
+import ComicsList from "../comicsList/ComicsList.jsx";
+import AppBanner from "../appBanner/AppBanner.jsx";
 
 const App = () => {
     const [selectedChar, setSelectedChar] = React.useState(null);
@@ -20,14 +22,16 @@ const App = () => {
         <div className="app">
             <AppHeader />
             <main>
-                <RandomChar />
-                <div className="char__content">
-                    <CharList onCharSelected={onCharSelected} />
-                    <ErrorBoundary>
-                        <CharInfo charId={selectedChar} />
-                    </ErrorBoundary>
-                </div>
-                <img className="bg-decoration" src={decoration} alt="vision" />
+                {/*<RandomChar />*/}
+                {/*<div className="char__content">*/}
+                {/*    <CharList onCharSelected={onCharSelected} />*/}
+                {/*    <ErrorBoundary>*/}
+                {/*        <CharInfo charId={selectedChar} />*/}
+                {/*    </ErrorBoundary>*/}
+                {/*</div>*/}
+                {/*<img className="bg-decoration" src={decoration} alt="vision" />*/}
+                <AppBanner />
+                <ComicsList />
             </main>
         </div>
     )

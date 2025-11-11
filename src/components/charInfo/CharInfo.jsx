@@ -8,53 +8,36 @@ import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import Skeleton from '../skeleton/Skeleton';
 
-import MarvelService from '../../services/MarvelService';
+import useMarvelService from '../../services/MarvelService.jsx';
 
 const CharInfo = (props) => {
 
     const [char, setChar] = useState({});
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
     const [skeleton, setSkeleton] = useState(true);
 
-    const skeletonMessage = skeleton ? <Skeleton /> : null;
-    const errorMessage = error ? <ErrorMessage /> : null;
-    const spinner = loading ? <Spinner /> : null;
-    const content = (!loading && !error && !skeleton) ? <View char={char} /> : null;
+    const {error, loading, getCharacters, clearError} = useMarvelService();
 
-
-    const marvelService = new MarvelService();
+    const skeletonMessage = skeleton ? <Skeleton/> : null;
+    const errorMessage = error ? <ErrorMessage/> : null;
+    const spinner = loading ? <Spinner/> : null;
+    const content = (!loading && !error && !skeleton) ? <View char={char}/> : null;
 
     useEffect(() => {
         updateChar();
     }, [props.charId])
 
     const updateChar = () => {
-        const { charId } = props;
+        const {charId} = props;
 
         if (!charId) return;
 
-        onCharLoading();
-
-        marvelService
-            .getCharacters(charId)
-            .then(onChatLoaded)
-            .catch(onError);
+        clearError();
+        getCharacters(charId).then(onChatLoaded);
     }
 
     const onChatLoaded = (char) => {
         setChar(char);
-        setLoading(false);
         setSkeleton(false);
-    }
-
-    const onCharLoading = () => {
-        setLoading(true);
-    }
-
-    const onError = () => {
-        setLoading(false);
-        setError(true);
     }
 
     return (
@@ -67,14 +50,14 @@ const CharInfo = (props) => {
     )
 };
 
-const View = ({ char }) => {
+const View = ({char}) => {
 
-    const { name, homepage, wiki, description, thumbnail, comics = {items: []} } = char;
+    const {name, homepage, wiki, description, thumbnail, comics = {items: []}} = char;
 
     return (
         <>
             <div className="char__basics">
-                <img src={thumbnail} alt="abyss" />
+                <img src={thumbnail} alt="abyss"/>
                 <div>
                     <div className="char__info-name">{name}</div>
                     <div className="char__btns">

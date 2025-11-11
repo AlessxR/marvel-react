@@ -1,7 +1,13 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import React from "react";
 
-// https://vite.dev/config/
-export default defineConfig({
-  plugins: [react()],
-})
+export default {
+    server: {
+        proxy: {
+            '/marvel': {
+                target: 'https://marvel-server-zeta.vercel.app',
+                changeOrigin: true,
+                rewrite: (path) => path.replace(/^\/marvel/, '')
+            }
+        }
+    }
+}

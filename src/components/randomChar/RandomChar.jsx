@@ -6,7 +6,7 @@ import mjolnir from '../../resources/img/mjolnir.png';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 
-import MarvelService from '../../services/MarvelService';
+import useMarvelService from '../../services/MarvelService.jsx';
 
 const RandomChar = () => {
 
@@ -14,40 +14,23 @@ const RandomChar = () => {
         updateChar();
     }, []);
 
+    const {loading, error, getCharacters, clearError} = useMarvelService();
+
     const [char, setChar] = useState({});
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
 
-
-    const errorMessage = error ? <ErrorMessage /> : null;
-    const spinner = loading ? <Spinner /> : null;
-    const content = !(loading || error) ? <View char={char} /> : null;
-
-    const marvelService = new MarvelService();
+    const errorMessage = error ? <ErrorMessage/> : null;
+    const spinner = loading ? <Spinner/> : null;
+    const content = !(loading || error) ? <View char={char}/> : null;
 
     const onChatLoaded = (char) => {
         setChar(char);
-        setLoading(false);
-    }
-
-    const onCharLoading = () => {
-        setLoading(true);
-    }
-
-    const onError = () => {
-        setLoading(false);
-        setError(true);
     }
 
     const updateChar = () => {
-        const id = Math.floor(Math.random() * (20 - 0));
-        onCharLoading();
-        marvelService
-            .getCharacters(id)
-            .then(onChatLoaded)
-            .catch(onError);
+        clearError();
+        const id = Math.floor(Math.random() * (20));
+        getCharacters(id).then(onChatLoaded);
     }
-
 
     return (
         <div className="randomchar">
@@ -56,7 +39,7 @@ const RandomChar = () => {
             {content}
             <div className="randomchar__static">
                 <p className="randomchar__title">
-                    Random character for today!<br />
+                    Random character for today!<br/>
                     Do you want to get to know him better?
                 </p>
                 <p className="randomchar__title">
@@ -68,19 +51,19 @@ const RandomChar = () => {
                 >
                     <div className="inner">try it</div>
                 </button>
-                <img src={mjolnir} alt="mjolnir" className="randomchar__decoration" />
+                <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/>
             </div>
         </div>
     )
 }
 
-const View = ({ char }) => {
+const View = ({char}) => {
 
     const {name, description, thumbnail, homepage, wiki} = char;
 
     return (
         <div className="randomchar__block">
-            <img src={thumbnail} alt="Random character" className="randomchar__img" />
+            <img src={thumbnail} alt="Random character" className="randomchar__img"/>
             <div className="randomchar__info">
                 <p className="randomchar__name">{name}</p>
                 <p className="randomchar__descr">
