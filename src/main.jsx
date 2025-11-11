@@ -4,7 +4,10 @@ import './index.css';
 import App from './components/app/App';
 
 import './style/style.scss';
+import {BrowserRouter} from "react-router-dom";
 
 createRoot(document.getElementById('root')).render(
-    <App/>
+    <BrowserRouter>
+        <App/>
+    </BrowserRouter>
 )
