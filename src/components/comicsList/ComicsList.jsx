@@ -6,7 +6,7 @@ import useMarvelService from "../../services/MarvelService.jsx";
 
 const ComicsList = () => {
 
-    const {error, loading, getAllComics} = useMarvelService();
+    const {getAllComics} = useMarvelService();
 
     const [comics, setComics] = useState([]);
     const [limit, setLimit] = useState(10);

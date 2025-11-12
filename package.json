@@ -13,7 +13,7 @@
     "prop-types": "^15.8.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "react-router-dom": "^5.3.4",
+    "react-router-dom": "^7.9.5",
     "sass-embedded": "^1.93.3"
   },
   "devDependencies": {

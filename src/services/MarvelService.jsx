@@ -11,7 +11,6 @@ const useMarvelService = () => {
     const _baseComicsLimit = 10;
 
     const getAllCharacters = async (limit = _baseLimit) => {
-        // Big object to API
         const result = await request(`${_apiBase}?limit=${limit}&apikey=${_apiKey}`);
 
         return result.data.results.map(_transformCharacter);
@@ -30,8 +29,6 @@ const useMarvelService = () => {
 
         return result.data.results.map(_transformComics);
     }
-
-
 
     const _transformCharacter = (character) => {
         return {

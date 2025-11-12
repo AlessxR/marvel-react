@@ -6,20 +6,17 @@ import useMarvelService from '../../services/MarvelService.jsx';
 
 const CharList = (props) => {
 
-    const {loading, error, getAllCharacters} = useMarvelService();
+    const {getAllCharacters} = useMarvelService();
 
     const [chars, setChars] = useState([]);
     const [newItemLoading, setNewItemLoading] = useState(false);
     const [limit, setLimit] = useState(9);
     const [selectedId, setSelectedId] = useState(null);
 
-
-    // To API
     useEffect(() => {
         onRequest(limit, true);
     }, []);
 
-    // To API
     const onRequest = (limit, initial) => {
         initial ? setNewItemLoading(false) : setNewItemLoading(true);
         getAllCharacters(limit).then(onCharListLoaded);
@@ -64,10 +61,10 @@ const CharList = (props) => {
     )
 }
 
-const RenderNewChar = ({ id, name, img, onSelect, selected }) => {
+const RenderNewChar = ({id, name, img, onSelect, selected}) => {
     return (
         <li className={`char__item ${selected ? 'char__item_selected' : ''}`} onClick={() => onSelect(id)}>
-            <img src={img} alt={name} />
+            <img src={img} alt={name}/>
             <div className="char__name">{name}</div>
         </li>
     )

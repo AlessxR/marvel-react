@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
 import './randomChar.scss';
+
 import mjolnir from '../../resources/img/mjolnir.png';
 
 import Spinner from '../spinner/Spinner';
@@ -10,11 +11,11 @@ import useMarvelService from '../../services/MarvelService.jsx';
 
 const RandomChar = () => {
 
+    const {loading, error, getCharacters, clearError} = useMarvelService();
+
     useEffect(() => {
         updateChar();
     }, []);
-
-    const {loading, error, getCharacters, clearError} = useMarvelService();
 
     const [char, setChar] = useState({});
 
@@ -22,14 +23,14 @@ const RandomChar = () => {
     const spinner = loading ? <Spinner/> : null;
     const content = !(loading || error) ? <View char={char}/> : null;
 
-    const onChatLoaded = (char) => {
+    const onCharLoaded = (char) => {
         setChar(char);
     }
 
     const updateChar = () => {
         clearError();
         const id = Math.floor(Math.random() * (20));
-        getCharacters(id).then(onChatLoaded);
+        getCharacters(id).then(onCharLoaded);
     }
 
     return (
