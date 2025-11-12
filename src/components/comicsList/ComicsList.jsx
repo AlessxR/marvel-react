@@ -3,6 +3,7 @@ import React, {useEffect, useState} from "react";
 import './comicsList.scss';
 
 import useMarvelService from "../../services/MarvelService.jsx";
+import {Link} from "react-router-dom";
 
 const ComicsList = () => {
 
@@ -37,9 +38,9 @@ const ComicsList = () => {
             <ul className="comics__grid">
                 {comics.map(comic => (
                     <li className="comics__item" key={comic.id}>
-                        <a href="#">
+                        <Link to={`/comics/${comic.id}`}>
                             <ComicComponent name={comic.title} price={comic.prices} img={comic.thumbnail} />
-                        </a>
+                        </Link>
                     </li>
                 ))}
             </ul>
