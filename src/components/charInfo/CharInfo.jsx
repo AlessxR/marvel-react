@@ -9,18 +9,20 @@ import ErrorMessage from '../errorMessage/ErrorMessage';
 import Skeleton from '../skeleton/Skeleton';
 
 import useMarvelService from '../../services/MarvelService.jsx';
+import {Link} from "react-router-dom";
 
 const CharInfo = (props) => {
 
     const [char, setChar] = useState({});
+    const [comic, setComic] = useState([]);
+
     const [skeleton, setSkeleton] = useState(true);
 
-    const {error, loading, getCharacters, clearError} = useMarvelService();
+    const {error, loading, getCharacters, clearError, getAllComics} = useMarvelService();
 
     const skeletonMessage = skeleton ? <Skeleton/> : null;
     const errorMessage = error ? <ErrorMessage/> : null;
     const spinner = loading ? <Spinner/> : null;
-    const content = (!loading && !error && !skeleton) ? <View char={char}/> : null;
 
     useEffect(() => {
         updateChar();
@@ -32,13 +34,21 @@ const CharInfo = (props) => {
         if (!charId) return;
 
         clearError();
-        getCharacters(charId).then(onChatLoaded);
+
+        getCharacters(charId).then(onCharLoaded);
+        getAllComics().then(onComicLoaded);
     }
 
-    const onChatLoaded = (char) => {
+    const onCharLoaded = (char) => {
         setChar(char);
         setSkeleton(false);
     }
+
+    const onComicLoaded = (comic) => {
+        setComic(comic);
+    }
+
+    const content = (!loading && !error && !skeleton) ? <View char={char} comic={comic}/> : null;
 
     return (
         <div className="char__info">
@@ -50,9 +60,9 @@ const CharInfo = (props) => {
     )
 };
 
-const View = ({char}) => {
+const View = ({char, comic}) => {
 
-    const {name, homepage, wiki, description, thumbnail, comics = {items: []}} = char;
+    const { name, homepage, wiki, description, thumbnail, comics = {items: []}} = char;
 
     return (
         <>
@@ -75,11 +85,21 @@ const View = ({char}) => {
             </div>
             <div className="char__comics">Comics:</div>
             <ul className="char__comics-list">
-                {comics.items.length === 0 ? 'This character doesnt have comics' : comics.items.map((item, i) => (
-                    <li className="char__comics-item" key={i}>
-                        {item}
-                    </li>
-                ))}
+                {comics.items.length === 0 ? 'This character doesn’t have comics' : comics.items.map((item, i) => {
+                        const foundComic = comic.find(c => c.title === item);
+                        if (!foundComic) {
+                            return <li key={i} className="char__comics-item">{item}</li>;
+                        }
+                        return (
+                            <Link
+                                to={`/comics/${foundComic.id}`}
+                                className="char__comics-item"
+                                key={i}
+                            >
+                                {item}
+                            </Link>
+                        );
+                    })}
             </ul>
         </>
     )
